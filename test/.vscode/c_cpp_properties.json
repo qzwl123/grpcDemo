@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/ttw/.local/include"          // grpc 头文件
+            ],
+            "browse": {
+            "path": [
+                "${workspaceFolder}/**",
+                "/home/ttw/.local/lib"          // grpc 库
+            ]
+        },
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

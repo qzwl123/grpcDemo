@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/ttw/ttw/grpcDemo/test/build",
+  "command": "/usr/bin/g++  -isystem /home/ttw/.local/include -g -o CMakeFiles/test.dir/Mytesst.cpp.o -c /home/ttw/ttw/grpcDemo/test/Mytesst.cpp",
+  "file": "/home/ttw/ttw/grpcDemo/test/Mytesst.cpp"
+},
+{
+  "directory": "/home/ttw/ttw/grpcDemo/test/build",
+  "command": "/usr/bin/g++  -isystem /home/ttw/.local/include -g -o CMakeFiles/test.dir/Person.pb.cc.o -c /home/ttw/ttw/grpcDemo/test/Person.pb.cc",
+  "file": "/home/ttw/ttw/grpcDemo/test/Person.pb.cc"
+}
+]

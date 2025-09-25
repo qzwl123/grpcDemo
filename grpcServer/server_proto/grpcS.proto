@@ -1,0 +1,18 @@
+
+syntax = "proto3";
+
+message Request {
+    int32 id = 1;
+    bytes name = 2;
+    bytes sex = 3;
+    int32 age = 4;
+}
+
+message Response {
+    string message = 1;
+}
+
+// 继承类的名称 = grpcS
+service grpcS {
+    rpc sayHello (Request) returns(Response) {};
+}

@@ -1,0 +1,3 @@
+/home/ttw/ttw/grpcDemo/grpcServer/build/CMakeFiles/mainServer.dir
+/home/ttw/ttw/grpcDemo/grpcServer/build/CMakeFiles/edit_cache.dir
+/home/ttw/ttw/grpcDemo/grpcServer/build/CMakeFiles/rebuild_cache.dir
