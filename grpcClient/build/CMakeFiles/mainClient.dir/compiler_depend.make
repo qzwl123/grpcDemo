@@ -210,6 +210,14 @@ CMakeFiles/mainClient.dir/mainClient.cpp.o: ../mainClient.cpp \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   /usr/include/c++/11/pstl/execution_defs.h \
+  /usr/include/c++/11/thread \
+  /usr/include/c++/11/bits/std_thread.h \
+  /usr/include/c++/11/bits/this_thread_sleep.h \
+  /usr/include/c++/11/chrono \
+  /usr/include/c++/11/ratio \
+  /usr/include/c++/11/limits \
+  /usr/include/c++/11/ctime \
+  /usr/include/c++/11/bits/parse_numbers.h \
   /home/ttw/.local/include/grpcpp/grpcpp.h \
   /home/ttw/.local/include/grpc/grpc.h \
   /home/ttw/.local/include/grpc/byte_buffer.h \
@@ -289,7 +297,6 @@ CMakeFiles/mainClient.dir/mainClient.cpp.o: ../mainClient.cpp \
   /usr/include/strings.h \
   /usr/include/c++/11/iterator \
   /usr/include/c++/11/bits/stream_iterator.h \
-  /usr/include/c++/11/limits \
   /home/ttw/.local/include/absl/base/nullability.h \
   /home/ttw/.local/include/absl/base/internal/nullability_impl.h \
   /home/ttw/.local/include/absl/meta/type_traits.h \
@@ -303,10 +310,6 @@ CMakeFiles/mainClient.dir/mainClient.cpp.o: ../mainClient.cpp \
   /home/ttw/.local/include/absl/log/internal/config.h \
   /home/ttw/.local/include/absl/time/time.h \
   /usr/include/x86_64-linux-gnu/sys/time.h \
-  /usr/include/c++/11/chrono \
-  /usr/include/c++/11/ratio \
-  /usr/include/c++/11/ctime \
-  /usr/include/c++/11/bits/parse_numbers.h \
   /usr/include/c++/11/cmath \
   /usr/include/math.h \
   /usr/include/x86_64-linux-gnu/bits/math-vector.h \
@@ -1895,9 +1898,11 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/google/protobuf/internal_visibility.h:
 
-/home/ttw/.local/include/absl/base/attributes.h:
+/home/ttw/.local/include/google/protobuf/message_lite.h:
 
-/usr/include/c++/11/sstream:
+/home/ttw/.local/include/google/protobuf/generated_message_tctable_decl.h:
+
+/home/ttw/.local/include/google/protobuf/explicitly_constructed.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h:
 
@@ -1935,10 +1940,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /usr/include/c++/11/bits/deque.tcc:
 
-/home/ttw/.local/include/absl/log/internal/check_op.h:
-
-/usr/include/string.h:
-
 /home/ttw/.local/include/grpc/impl/compression_types.h:
 
 /home/ttw/.local/include/grpc/impl/grpc_types.h:
@@ -1955,7 +1956,23 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/absl/crc/internal/crc32_x86_arm_combined_simd.h:
 
+/home/ttw/.local/include/grpcpp/impl/rpc_method.h:
+
+/usr/include/c++/11/ratio:
+
+/usr/include/c++/11/thread:
+
+/usr/include/c++/11/bits/std_thread.h:
+
+/home/ttw/.local/include/google/protobuf/util/json_util.h:
+
+/usr/include/c++/11/bits/parse_numbers.h:
+
 /usr/include/c++/11/bits/shared_ptr_atomic.h:
+
+/home/ttw/.local/include/absl/base/internal/spinlock_wait.h:
+
+/home/ttw/.local/include/absl/time/internal/cctz/include/cctz/time_zone.h:
 
 /home/ttw/.local/include/google/protobuf/generated_message_util.h:
 
@@ -2003,13 +2020,13 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
 
+/usr/include/c++/11/bits/this_thread_sleep.h:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h:
 
 /home/ttw/.local/include/grpc/support/sync.h:
 
 /usr/include/c++/11/bits/streambuf_iterator.h:
-
-/home/ttw/.local/include/absl/strings/internal/cord_data_edge.h:
 
 /usr/include/c++/11/bits/locale_facets.h:
 
@@ -2018,6 +2035,14 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/c++/11/bits/atomic_lockfree_defines.h:
 
 /home/ttw/.local/include/grpcpp/support/string_ref.h:
+
+/usr/include/c++/11/bits/stl_iterator_base_funcs.h:
+
+/usr/include/c++/11/bits/streambuf.tcc:
+
+/home/ttw/.local/include/absl/log/internal/check_op.h:
+
+/usr/include/string.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h:
 
@@ -2035,15 +2060,15 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /usr/include/c++/11/bits/stl_vector.h:
 
-/home/ttw/.local/include/absl/strings/has_ostream_operator.h:
-
-/usr/include/c++/11/cstddef:
-
 /home/ttw/.local/include/absl/strings/internal/str_format/bind.h:
 
 /usr/include/c++/11/bits/basic_string.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
+
+/usr/include/c++/11/limits:
+
+/home/ttw/.local/include/grpcpp/support/server_interceptor.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
@@ -2056,6 +2081,8 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/c++/11/cerrno:
 
 /usr/include/stdio.h:
+
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
 /usr/include/c++/11/cstdio:
 
@@ -2081,6 +2108,10 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/absl/numeric/bits.h:
 
+/usr/include/c++/11/bits/cpp_type_traits.h:
+
+/usr/include/endian.h:
+
 /usr/include/stdint.h:
 
 /usr/include/c++/11/bits/ptr_traits.h:
@@ -2094,16 +2125,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/stdlib.h:
 
 /usr/include/c++/11/bits/functional_hash.h:
-
-/home/ttw/.local/include/google/protobuf/explicitly_constructed.h:
-
-/usr/include/c++/11/bits/streambuf.tcc:
-
-/usr/include/c++/11/bits/stl_iterator_base_funcs.h:
-
-/usr/include/endian.h:
-
-/usr/include/c++/11/bits/cpp_type_traits.h:
 
 /usr/include/ctype.h:
 
@@ -2158,12 +2179,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 ../color.h:
 
 /home/ttw/.local/include/grpc/impl/propagation_bits.h:
-
-/usr/include/c++/11/bits/fs_fwd.h:
-
-/home/ttw/.local/include/absl/log/internal/nullguard.h:
-
-/home/ttw/.local/include/absl/strings/cord_buffer.h:
 
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
 
@@ -2239,12 +2254,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/grpc/support/cpu.h:
 
-/home/ttw/.local/include/absl/strings/internal/cord_rep_btree_reader.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
-
 /home/ttw/.local/include/absl/base/port.h:
 
 /usr/include/features-time64.h:
@@ -2256,8 +2265,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /home/ttw/.local/include/absl/numeric/int128_have_intrinsic.inc:
 
 /usr/include/c++/11/pstl/execution_defs.h:
-
-/usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
@@ -2380,10 +2387,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /home/ttw/.local/include/absl/time/clock.h:
 
 /home/ttw/.local/include/absl/strings/internal/str_format/extension.h:
-
-/home/ttw/.local/include/google/protobuf/type.pb.h:
-
-/home/ttw/.local/include/absl/base/policy_checks.h:
 
 /home/ttw/.local/include/grpc/status.h:
 
@@ -2569,6 +2572,32 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /usr/include/c++/11/bits/stl_deque.h:
 
+/home/ttw/.local/include/absl/strings/internal/cord_data_edge.h:
+
+/usr/include/c++/11/cstddef:
+
+/home/ttw/.local/include/absl/strings/has_ostream_operator.h:
+
+/home/ttw/.local/include/google/protobuf/type.pb.h:
+
+/home/ttw/.local/include/absl/base/policy_checks.h:
+
+/usr/include/c++/11/sstream:
+
+/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
+
+/home/ttw/.local/include/absl/strings/internal/cord_rep_btree_reader.h:
+
+/home/ttw/.local/include/absl/base/attributes.h:
+
+/usr/include/c++/11/bits/fs_fwd.h:
+
+/home/ttw/.local/include/absl/strings/cord_buffer.h:
+
+/home/ttw/.local/include/absl/log/internal/nullguard.h:
+
 /home/ttw/.local/include/google/protobuf/io/zero_copy_stream_impl_lite.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix_opt.h:
@@ -2607,14 +2636,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /usr/include/c++/11/cassert:
 
-/home/ttw/.local/include/grpcpp/support/server_interceptor.h:
-
-/usr/include/c++/11/limits:
-
-/home/ttw/.local/include/absl/time/internal/cctz/include/cctz/time_zone.h:
-
-/home/ttw/.local/include/absl/base/internal/spinlock_wait.h:
-
 /usr/include/c++/11/map:
 
 /home/ttw/.local/include/grpcpp/support/sync_stream.h:
@@ -2642,14 +2663,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/x86_64-linux-gnu/sys/time.h:
 
 /home/ttw/.local/include/grpcpp/support/channel_arguments.h:
-
-/home/ttw/.local/include/grpcpp/impl/rpc_method.h:
-
-/usr/include/c++/11/ratio:
-
-/home/ttw/.local/include/google/protobuf/util/json_util.h:
-
-/usr/include/c++/11/bits/parse_numbers.h:
 
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
 
@@ -3070,7 +3083,3 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /home/ttw/.local/include/grpcpp/impl/server_callback_handlers.h:
 
 /home/ttw/.local/include/google/protobuf/arenastring.h:
-
-/home/ttw/.local/include/google/protobuf/generated_message_tctable_decl.h:
-
-/home/ttw/.local/include/google/protobuf/message_lite.h:

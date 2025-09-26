@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <memory> 
+#include <thread>
 
 #include <grpcpp/grpcpp.h>
 #include "color.h"
@@ -37,14 +38,15 @@ class RouteGuideClient{
 
     }
 
-    void GetFeature() {
-        std::cout << CLR_CYAN << " [ GetFeature ] " << CLR_NONE << std::endl;
+    /// @brief 一元RPC
+    void GetFeature() {        
+        printFuncName("GetFeature");
 
         Request requt; 
         Response resp;
         
         requt.set_id(1);
-        requt.set_name("ttw");
+        requt.set_data("ttw");
         
         grpc::ClientContext context;
         grpc::Status status = m_stub_->sayHello(&context, requt, &resp);
@@ -54,6 +56,75 @@ class RouteGuideClient{
         }
 
         return ;
+    }
+    
+    /// @brief 服务器流RPC
+    void ListFeatures() {
+        printFuncName("ListFeatures");
+
+        Request requt; 
+        Response resp;
+        grpc::ClientContext context;
+
+        requt.set_id(1);
+        requt.set_data("ttw");
+
+        std::unique_ptr<grpc::ClientReader<Response> > reader(
+        m_stub_->ListFeatures(&context, requt));
+
+        while (reader->Read(&resp)) // 阻塞等待，来一条处理一条
+        {
+            std::cout << CLR_GREEN << "[ ListFeatures ]" << CLR_NONE << " : " << resp.message() << std::endl;
+        }
+        grpc::Status status = reader->Finish();
+
+        if (status.ok()) {
+            std::cout << CLR_CYAN << "[ ListFeatures ]" << CLR_NONE << "ListFeatures rpc succeeded." << std::endl;
+        } else {
+            std::cout << CLR_RED << "[ ListFeatures ]" << CLR_NONE << "ListFeatures rpc failed." << std::endl;
+        }
+        return ;
+    }
+    
+    /// @brief 客户端流RPC  
+    void RecordRoute() {
+        printFuncName("RecordRoute");
+
+        Request requt; 
+        Response resp;
+        grpc::ClientContext context;
+
+        requt.set_id(1);
+        requt.set_data("RecordRoute");
+
+        std::unique_ptr<grpc::ClientWriter<Request> > writer(
+            m_stub_->RecordRoute(&context, &resp));
+        int i = 0;
+        for(i = 0; i < 10; i += 1) {
+        
+            requt.set_id(i);
+            if(!writer->Write(requt)) {
+                // false 表示流已关闭。
+                break; 
+            }
+            
+            /* 
+                为什么在同步模式上加上 sleep 后一条都发不出去
+
+                在 同步客户端流 模式下，Write() 只是把对象序列化后塞进 gRPC 的用户态缓冲区，
+                真正的 TCP send() 由 gRPC 的内部 “发送协程” 负责；而这个协程和调用 Write() 的线程是同一个（同步完成队列没有额外后台线程）。
+                std::this_thread::sleep_for(std::chrono::milliseconds(5000)); // 毫秒  只挂当前线程，单位自带类型安全
+            */
+
+        }
+        std::cout << CLR_CYAN << " [ RecordRoute ] Send count : " << CLR_NONE  << i << std::endl;
+        writer->WritesDone();
+
+    }
+
+ private :
+    void printFuncName(std::string s) {
+        std::cout << CLR_CYAN << " [ " << s << " ] " << CLR_NONE << std::endl;
     }
 
  private:
@@ -99,5 +170,8 @@ int main() {
 
     guide.GetFeature();
 
+    guide.ListFeatures();
+
+    guide.RecordRoute();
     return 0;
 }

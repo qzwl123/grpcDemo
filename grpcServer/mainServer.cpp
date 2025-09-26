@@ -31,14 +31,17 @@ using routeguide::RouteGuide;
 
 /********************* using Proto End *********************/
 
+// 同步RPC
+BEGINS(synchronize_GRPC)
 
 class MygrpcServer final : public RouteGuide::Service {
 
+    
     // 一元RPC
     virtual grpc::Status sayHello(grpc::ServerContext* context, const routeguide::Request* request, routeguide::Response* response) {
-        std::cout << CLR_GREEN << " [ sayHello ] : " << CLR_NONE << " id :" << request->id() << " name :" << request->name() << std::endl;
+        std::cout << CLR_GREEN << " [ sayHello ] : " << CLR_NONE << " id :" << request->id() << " name :" << request->data() << std::endl;
         std::ostringstream message;
-        message << " sayHello Name : " << request->name();
+        message << " sayHello Name : " << request->data();
         response->set_message(message.str());
 
         return grpc::Status::OK;
@@ -47,22 +50,34 @@ class MygrpcServer final : public RouteGuide::Service {
 
     // 服务器流RPC
     virtual grpc::Status ListFeatures(grpc::ServerContext* context, const routeguide::Request* request, grpc::ServerWriter< routeguide::Response >* writer) {
-        std::cout << CLR_GREEN << " [ 服务器流RPC_ListFeatures ] : " << CLR_NONE << " id :" << request->id() << " name :" << request->name() << std::endl;
+        std::cout << CLR_GREEN << " [ 服务器流RPC_ListFeatures ] : " << CLR_NONE << " id :" << request->id() << " name :" << request->data() << std::endl;
 
         // id 号累加 10次
         get_m_Meassage_list_(*request);
 
         for(const Response& r : m_Meassage_list_) {
-            writer->Write(r);
+            writer->Write(r); // 随时发，HTTP/2 DATA 帧
         }
 
+        // writer->WritesDone(); 同步 ServerWriter 接口在函数返回时，gRPC 会自动补调 WritesDone()
         return grpc::Status::OK;
     }
 
     // 客户端流PRC
     virtual grpc::Status RecordRoute(grpc::ServerContext* context, grpc::ServerReader< routeguide::Request>* reader, ::routeguide::Response* response) {
-        // std::cout << CLR_GREEN << " [ 客户端流PRC_RecordRoute ] : " << CLR_NONE << " id :" << request->id() << " name :" << request->name() << std::endl;
+        std::cout << CLR_CYAN << " [ 客户端流PRC_RecordRoute ]  " << std::endl;
 
+        Request requt; 
+        Response resp;
+        int Request_count = 0;
+
+        while (reader->Read(&requt)) {
+            Request_count++;
+            std::cout << CLR_GREEN << " [ RecordRoute Recv ] " << CLR_NONE << " : " << requt.id() << " " << requt.data() << std::endl;
+        
+        }
+        
+        std::cout << CLR_CYAN << " [ 客户端流PRC_END messages count ] : " << CLR_NONE <<  Request_count << std::endl;
         return grpc::Status::OK;
     }
 
@@ -81,9 +96,9 @@ class MygrpcServer final : public RouteGuide::Service {
         m_Meassage_list_ = std::vector<Response>();
         for(int i = 0; i < 10; i += 1) {
             Response t;
-            t.set_message(std::to_string(rest.id() + 1) + "_" + rest.name());            
+            std::string s = std::to_string(rest.id() + i) + "_" + rest.data();
+            t.set_message(s);            
             m_Meassage_list_.push_back(t);
-
         }
         return ;
     }
@@ -112,6 +127,22 @@ void runServer(const char* ipPort = "0.0.0.0:5200") {
 int main() {
     std::cout << CLR_CYAN << " [ main runServer Ordinary ] " << CLR_NONE << std::endl;
     runServer();
+    return 0;
+}
+
+ENDS(synchronize_GRPC)
+
+/***************************************************************************************************************************************************/
+
+BEGINS(asynchronize_GRPC)
+
+
+
+ENDS(asynchronize_GRPC)
+
+int main() {
+    synchronize_GRPC::main();
+
     return 0;
 }
 

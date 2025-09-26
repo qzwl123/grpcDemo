@@ -46,7 +46,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 
 inline constexpr Request::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : name_(
+      : data_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         id_{0},
@@ -83,7 +83,7 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::routeguide::Request, _impl_.id_),
-        PROTOBUF_FIELD_OFFSET(::routeguide::Request, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::routeguide::Request, _impl_.data_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::routeguide::Response, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -107,7 +107,7 @@ static const ::_pb::Message* const file_default_instances[] = {
 const char descriptor_table_protodef_stream_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\014stream.proto\022\nrouteguide\"#\n\007Request\022\n\n"
-    "\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\014\"\033\n\010Response\022\017\n\007m"
+    "\002id\030\001 \001(\005\022\014\n\004data\030\002 \001(\014\"\033\n\010Response\022\017\n\007m"
     "essage\030\001 \001(\t2\200\002\n\nRouteGuide\0227\n\010sayHello\022"
     "\023.routeguide.Request\032\024.routeguide.Respon"
     "se\"\000\022=\n\014ListFeatures\022\023.routeguide.Reques"
@@ -164,7 +164,7 @@ Request::Request(::google::protobuf::Arena* arena)
 inline PROTOBUF_NDEBUG_INLINE Request::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from)
-      : name_(arena, from.name_),
+      : data_(arena, from.data_),
         _cached_size_{0} {}
 
 Request::Request(
@@ -183,7 +183,7 @@ Request::Request(
 inline PROTOBUF_NDEBUG_INLINE Request::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : name_(arena),
+      : data_(arena),
         _cached_size_{0} {}
 
 inline void Request::SharedCtor(::_pb::Arena* arena) {
@@ -197,7 +197,7 @@ Request::~Request() {
 }
 inline void Request::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.name_.Destroy();
+  _impl_.data_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -222,7 +222,7 @@ PROTOBUF_NOINLINE void Request::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.name_.ClearToEmpty();
+  _impl_.data_.ClearToEmpty();
   _impl_.id_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -252,9 +252,9 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Request::_table_ = {
     ::_pbi::TcParser::GetTable<::routeguide::Request>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bytes name = 2;
+    // bytes data = 2;
     {::_pbi::TcParser::FastBS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(Request, _impl_.name_)}},
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(Request, _impl_.data_)}},
     // int32 id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Request, _impl_.id_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(Request, _impl_.id_)}},
@@ -264,8 +264,8 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Request::_table_ = {
     // int32 id = 1;
     {PROTOBUF_FIELD_OFFSET(Request, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-    // bytes name = 2;
-    {PROTOBUF_FIELD_OFFSET(Request, _impl_.name_), 0, 0,
+    // bytes data = 2;
+    {PROTOBUF_FIELD_OFFSET(Request, _impl_.data_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -287,9 +287,9 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Request::_table_ = {
             stream, this->_internal_id(), target);
   }
 
-  // bytes name = 2;
-  if (!this->_internal_name().empty()) {
-    const std::string& _s = this->_internal_name();
+  // bytes data = 2;
+  if (!this->_internal_data().empty()) {
+    const std::string& _s = this->_internal_data();
     target = stream->WriteBytesMaybeAliased(2, _s, target);
   }
 
@@ -310,10 +310,10 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Request::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // bytes name = 2;
-  if (!this->_internal_name().empty()) {
+  // bytes data = 2;
+  if (!this->_internal_data().empty()) {
     total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
-                                    this->_internal_name());
+                                    this->_internal_data());
   }
 
   // int32 id = 1;
@@ -334,8 +334,8 @@ void Request::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google:
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_name().empty()) {
-    _this->_internal_set_name(from._internal_name());
+  if (!from._internal_data().empty()) {
+    _this->_internal_set_data(from._internal_data());
   }
   if (from._internal_id() != 0) {
     _this->_impl_.id_ = from._impl_.id_;
@@ -359,7 +359,7 @@ void Request::InternalSwap(Request* PROTOBUF_RESTRICT other) {
   auto* arena = GetArena();
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.data_, &other->_impl_.data_, arena);
         swap(_impl_.id_, other->_impl_.id_);
 }
 
