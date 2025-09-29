@@ -25,8 +25,10 @@
 
 #define CLR_RED          "\033[0;32;31m" 	// 错误
 
+/// @brief 警告
 #define CLR_YELLOW       "\033[1;33m" 		// 警告
 
+/// @brief 接收消息
 #define CLR_GREEN        "\033[0;32;32m" 	// 接收消息
 
 #define CLR_BLUE         "\033[0;32;34m" 	// 发送消息

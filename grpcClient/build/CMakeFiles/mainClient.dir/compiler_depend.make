@@ -218,6 +218,9 @@ CMakeFiles/mainClient.dir/mainClient.cpp.o: ../mainClient.cpp \
   /usr/include/c++/11/limits \
   /usr/include/c++/11/ctime \
   /usr/include/c++/11/bits/parse_numbers.h \
+  /usr/include/c++/11/condition_variable \
+  /usr/include/c++/11/bits/std_mutex.h \
+  /usr/include/c++/11/bits/unique_lock.h \
   /home/ttw/.local/include/grpcpp/grpcpp.h \
   /home/ttw/.local/include/grpc/grpc.h \
   /home/ttw/.local/include/grpc/byte_buffer.h \
@@ -373,8 +376,6 @@ CMakeFiles/mainClient.dir/mainClient.cpp.o: ../mainClient.cpp \
   /home/ttw/.local/include/grpcpp/impl/codegen/sync.h \
   /home/ttw/.local/include/grpcpp/impl/sync.h \
   /usr/include/c++/11/mutex \
-  /usr/include/c++/11/bits/std_mutex.h \
-  /usr/include/c++/11/bits/unique_lock.h \
   /home/ttw/.local/include/absl/synchronization/mutex.h \
   /home/ttw/.local/include/absl/base/const_init.h \
   /home/ttw/.local/include/absl/base/internal/identity.h \
@@ -1904,6 +1905,10 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/google/protobuf/explicitly_constructed.h:
 
+/home/ttw/.local/include/grpcpp/impl/server_callback_handlers.h:
+
+/home/ttw/.local/include/google/protobuf/arenastring.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h:
 
 /home/ttw/.local/include/absl/base/optimization.h:
@@ -1917,8 +1922,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /home/ttw/.local/include/grpcpp/channel.h:
 
 /home/ttw/.local/include/grpcpp/impl/codegen/sync.h:
-
-/usr/include/x86_64-linux-gnu/bits/uio_lim.h:
 
 /home/ttw/.local/include/grpc/slice_buffer.h:
 
@@ -1956,9 +1959,9 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/absl/crc/internal/crc32_x86_arm_combined_simd.h:
 
-/home/ttw/.local/include/grpcpp/impl/rpc_method.h:
+/home/ttw/.local/include/google/protobuf/any.h:
 
-/usr/include/c++/11/ratio:
+/usr/include/c++/11/bits/unique_lock.h:
 
 /usr/include/c++/11/thread:
 
@@ -1989,10 +1992,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/c++/11/bits/stl_relops.h:
 
 /usr/include/limits.h:
-
-/home/ttw/.local/include/google/protobuf/any.h:
-
-/usr/include/c++/11/bits/unique_lock.h:
 
 /home/ttw/.local/include/google/protobuf/wire_format_lite.h:
 
@@ -2127,8 +2126,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/c++/11/bits/functional_hash.h:
 
 /usr/include/ctype.h:
-
-/usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
 
 /usr/include/c++/11/iosfwd:
 
@@ -2388,6 +2385,14 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/absl/strings/internal/str_format/extension.h:
 
+/usr/include/c++/11/bits/std_mutex.h:
+
+../stream_proto/proto/stream.pb.h:
+
+/usr/include/c++/11/tr1/poly_laguerre.tcc:
+
+/home/ttw/.local/include/absl/algorithm/algorithm.h:
+
 /home/ttw/.local/include/grpc/status.h:
 
 /usr/include/c++/11/tuple:
@@ -2397,6 +2402,12 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/uio_lim.h:
+
+/usr/include/c++/11/ratio:
+
+/home/ttw/.local/include/grpcpp/impl/rpc_method.h:
 
 /home/ttw/.local/include/grpc/support/sync_abseil.h:
 
@@ -2572,6 +2583,8 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /usr/include/c++/11/bits/stl_deque.h:
 
+/usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
+
 /home/ttw/.local/include/absl/strings/internal/cord_data_edge.h:
 
 /usr/include/c++/11/cstddef:
@@ -2719,14 +2732,6 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /home/ttw/.local/include/grpcpp/impl/channel_argument_option.h:
 
 /usr/include/c++/11/tr1/poly_hermite.tcc:
-
-../stream_proto/proto/stream.pb.h:
-
-/usr/include/c++/11/tr1/poly_laguerre.tcc:
-
-/home/ttw/.local/include/absl/algorithm/algorithm.h:
-
-/usr/include/c++/11/bits/std_mutex.h:
 
 /home/ttw/.local/include/absl/container/internal/hash_policy_traits.h:
 
@@ -2972,6 +2977,8 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 
 /home/ttw/.local/include/absl/types/optional.h:
 
+/usr/include/c++/11/condition_variable:
+
 /usr/include/c++/11/optional:
 
 /home/ttw/.local/include/absl/types/compare.h:
@@ -3079,7 +3086,3 @@ CMakeFiles/mainClient.dir/stream_proto/proto/stream.pb.cc.o: ../stream_proto/pro
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
 
 /home/ttw/.local/include/google/protobuf/arenaz_sampler.h:
-
-/home/ttw/.local/include/grpcpp/impl/server_callback_handlers.h:
-
-/home/ttw/.local/include/google/protobuf/arenastring.h:

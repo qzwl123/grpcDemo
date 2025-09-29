@@ -47,7 +47,6 @@ class MygrpcServer final : public RouteGuide::Service {
         return grpc::Status::OK;
     }
 
-
     // 服务器流RPC
     virtual grpc::Status ListFeatures(grpc::ServerContext* context, const routeguide::Request* request, grpc::ServerWriter< routeguide::Response >* writer) {
         std::cout << CLR_GREEN << " [ 服务器流RPC_ListFeatures ] : " << CLR_NONE << " id :" << request->id() << " name :" << request->data() << std::endl;
@@ -119,6 +118,7 @@ void runServer(const char* ipPort = "0.0.0.0:5200") {
     buider.RegisterService(&service);
 
     // 3.启动服务器
+    
     std::unique_ptr<grpc::Server> server = buider.BuildAndStart();
     server->Wait();
     return ;
@@ -134,14 +134,119 @@ ENDS(synchronize_GRPC)
 
 /***************************************************************************************************************************************************/
 
-BEGINS(asynchronize_GRPC)
+BEGINS(callback_GRPC)
 
 
+/*
 
-ENDS(asynchronize_GRPC)
+    返回 ServerUnaryReactor* 就是向框架声明：“我玩的是异步回调，生命周期我自己管，等我 Finish() 你再发响应。”
+
+*/
+
+class MygrpcServer final : public RouteGuide::CallbackService{
+
+    /// @brief 一元RPC
+    /// @param context 
+    /// @param request 
+    /// @param response 
+    /// @return 
+    grpc::ServerUnaryReactor* sayHello(grpc::CallbackServerContext* context, 
+                                       const ::routeguide::Request* request, 
+                                       routeguide::Response* response)  { 
+
+        class Reactor : public  grpc::ServerUnaryReactor {
+
+        public:
+            Reactor(const Request &request, Response *response) // 初始化列表，可以传进来 业务所需要 变量
+            {
+                std::cout << CLR_GREEN << " [ sayHello ] : " << CLR_NONE << request.id() << " " << request.data() << std::endl;
+
+                /*********************** 业务处理逻辑 Begin ***********************/
+
+                response->set_message("sayHello");
+                
+                Finish(grpc::Status::OK); // 会触发 OnDone() 一次且仅一次
+
+                /*********************** 业务处理逻辑 End ***********************/
+            }
+
+        private:
+            // 当 最后一次写（Finish）也完成 且 连接层彻底清理 后，框架回调 OnDone()
+            void OnDone() override {
+                std::cout << CLR_CYAN << "[ sayHello  OnDone ] INFO : " << CLR_NONE << "RPC Completed" << std::endl;                
+                delete this;
+            }
+
+            // 当 OnWriteDone ok=false / 客户端按 Ctrl-C 中途杀流 ， 当前函数执行完，最后也会调用  OnDone()
+            void OnCancel() override { 
+                std::cout << CLR_RED << "[ sayHello OnCancel] ERROR : " << CLR_NONE << "RPC Cancelled" << std::endl;                
+            }
+
+        };
+
+
+        return new Reactor(*request, response); 
+    }
+
+    /// @brief 服务器流RPC
+    /// @param context 
+    /// @param request 
+    /// @return 
+    grpc::ServerWriteReactor<routeguide::Response>* ListFeatures(grpc::CallbackServerContext* context, const ::routeguide::Request* request)  { 
+        return nullptr; 
+    }
+
+    /// @brief 客户端流PRC
+    /// @param context 
+    /// @param response 
+    /// @return 
+    grpc::ServerReadReactor<routeguide::Request>* RecordRoute(grpc::CallbackServerContext* context, ::routeguide::Response* response)  { 
+        return nullptr; 
+    }
+
+    /// @brief 双向流RPC
+    /// @param context 
+    /// @return 
+    grpc::ServerBidiReactor<routeguide::Request, routeguide::Response>* RouteChat(grpc::CallbackServerContext* context) {
+        return nullptr; 
+
+    }
+};
+
+void runServer(const char* ipPort = "0.0.0.0:5200") {
+    std::cout << CLR_CYAN << " [ runServer ] : "  << CLR_NONE << ipPort << std::endl;
+
+    // 1.设置服务程序参数
+    grpc::ServerBuilder buider;
+    // 第二个参数表示不使用安全连接
+    buider.AddListeningPort(ipPort, grpc::InsecureServerCredentials());
+
+    // 2.注册服务函数
+    MygrpcServer service;
+    buider.RegisterService(&service);
+
+    // 3.启动服务器
+    
+    std::unique_ptr<grpc::Server> server = buider.BuildAndStart();
+    server->Wait();
+    return ;
+}
 
 int main() {
-    synchronize_GRPC::main();
+    std::cout << CLR_CYAN << " [ 回调 main runServer Ordinary ] " << CLR_NONE << std::endl;
+    runServer();
+
+    return 0;
+}
+
+ENDS(callback_GRPC)
+
+int main() {
+    // 同步测试 : RPC server
+    // synchronize_GRPC::main();
+
+    // 回调测试 ： RPC server
+    callback_GRPC::main();
 
     return 0;
 }

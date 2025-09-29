@@ -15,6 +15,7 @@
 #include <vector>
 #include <memory> 
 #include <thread>
+#include <condition_variable>
 
 #include <grpcpp/grpcpp.h>
 #include "color.h"
@@ -31,6 +32,8 @@ using routeguide::Request;
 using routeguide::RouteGuide;
 
 /********************* using Proto End *********************/
+
+BEGINS(synchronize_GRPC)
 
 class RouteGuideClient{
  public:
@@ -168,10 +171,186 @@ int main() {
         grpc::CreateChannel("127.0.0.0:5200", grpc::InsecureChannelCredentials())
     );
 
-    guide.GetFeature();
+    std::cout << " ********* 同步 RPC Begin ********* " << std::endl;
+    std::cout << " 1 . 一元 RPC " << std::endl;
+    std::cout << " 2 . 服务器流RPC " << std::endl;
+    std::cout << " 3 . 客户端流RPC " << std::endl;
+    std::cout << " ********* 同步 RPC Endl ********* " << std::endl;
 
-    guide.ListFeatures();
+    int nu = 0;
+    std::cin >> nu;
+    switch (nu)
+    {
+    case 1:
+        guide.GetFeature();
+        break;
+    case 2:
+        guide.ListFeatures();
+        break;
+    case 3:
+        guide.RecordRoute();
+        break;
+    default:
+        break;
+    }
+    return 0;
+}
+ENDS(synchronize_GRPC)
 
-    guide.RecordRoute();
+
+
+
+
+
+
+
+BEGINS(callback_GRPC)
+
+class RouteGuideClient {
+public:
+    RouteGuideClient(std::shared_ptr<grpc::Channel> channel) : 
+                    m_stub_(RouteGuide::NewStub(channel)) {
+
+    }                    
+
+    
+#if true
+
+    class HelloReactor : public grpc::ClientUnaryReactor {        
+        public:
+
+            HelloReactor(const std::shared_ptr<RouteGuide::Stub>& stub) :
+                        stub_(stub), 
+                        ctx_(new grpc::ClientContext),
+                        request_(new routeguide::Request),
+                        response_(new routeguide::Response) {          
+
+                // 请求
+                request_->set_id(1);
+                request_->set_data("Syahellow");
+
+
+                // 把 this 注册为 reactor，框架会在完成时回调 OnDone
+                stub_->async()->sayHello(ctx_.get(), request_.get(), response_.get(), this);
+                // 2. 关键：把请求发出去！
+                StartCall();   // ← 少了这一步，框架永远不会回调
+            }
+
+            /* ---------- 框架回调 ---------- */
+            void OnDone(const grpc::Status& status) override {
+                
+                if (status.ok()) {
+                    std::cout << CLR_GREEN << " [ sayHello -> HelloReactor ] :" << CLR_NONE << std::hex << response_->message() << std::endl;
+                } else {
+                    std::cout << CLR_RED <<  " [ sayHello -> HelloReactor ] :"  << status.error_message() << std::endl;
+                }
+                delete this;   // 自杀，生命周期结束
+            }
+
+        private:
+            std::shared_ptr<RouteGuide::Stub> stub_;  // 如果 stub 全局可省
+            std::unique_ptr<grpc::ClientContext>          ctx_;
+            std::unique_ptr<routeguide::Request>          request_;
+            std::unique_ptr<routeguide::Response>         response_;
+    };
+
+    /// @brief 一元RPC 对象回调
+    void *sayHello() {
+        printFuncName("sayHello");
+        return new HelloReactor(m_stub_);   // 立即返回，0 阻塞        
+    }   
+
+#else
+    /// @brief 一元RPC 匿名函数（闭包）
+    void sayHello() {
+        Request request;
+        Response response;
+        grpc::ClientContext context;
+
+        request.set_id(1);
+        request.set_data("sayHello_匿名函数");
+        
+        bool result;
+        std::mutex mu;
+        std::condition_variable cv;
+        bool done = false;
+        m_stub_->async()->sayHello(
+        &context, &request, &response,
+        [&result, &mu, &cv, &done, response, this](grpc::Status status) {
+          bool ret;
+          if (!status.ok()) {
+            std::cout << "GetFeature rpc failed." << std::endl;
+            ret = false;
+          }  else {
+            std::cout << "Found feature called " 
+                      << response.message()
+                      << std::endl;
+            ret = true;
+          }
+          std::lock_guard<std::mutex> lock(mu);
+          result = ret;
+          done = true;
+          cv.notify_one();
+        });
+        std::unique_lock<std::mutex> lock(mu);
+        cv.wait(lock, [&done] { return done; });
+        return ;
+    }
+#endif    
+
+
+    /// @brief 服务器流RPC
+    void ListFeatures() {}
+    /// @brief 客户端流RPC  
+    void RecordRoute() {}    
+
+private:
+    std::shared_ptr< RouteGuide::Stub> m_stub_;
+    
+    void printFuncName(std::string s) {
+        std::cout << CLR_CYAN << " [ " << s << " ] " << CLR_NONE << std::endl;
+    }
+};
+
+int main() {
+    RouteGuideClient guide(
+        grpc::CreateChannel("127.0.0.0:5200", grpc::InsecureChannelCredentials())
+    );
+
+    std::cout << " ********* 回调 RPC Begin ********* " << std::endl;
+    std::cout << " 1 . 一元 RPC " << std::endl;
+    std::cout << " 2 . 服务器流RPC " << std::endl;
+    std::cout << " 3 . 客户端流RPC " << std::endl;
+    std::cout << " ********* 回调 RPC Endl ********* " << std::endl;
+
+    int nu = 0;
+    while (std::cin >> nu) {        
+        switch (nu)
+        {
+        case 1:
+            guide.sayHello();
+            break;
+        case 2:
+            guide.ListFeatures();
+            break;
+        case 3:
+            guide.RecordRoute();
+            break;
+        default:
+            break;
+        }
+    }
+    
+
+    return 0;
+}
+ENDS(callback_GRPC)
+
+int main() {
+
+    // synchronize_GRPC::main();
+
+    callback_GRPC::main();
+
     return 0;
 }
