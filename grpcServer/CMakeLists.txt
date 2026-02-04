@@ -1,62 +1,62 @@
-# -------------- 基础要求 --------------
-# 最低 CMake 版本；3.16 以上对 gRPC 支持更好
+# -------------- 1. 基础配置 --------------
 cmake_minimum_required(VERSION 3.16)
+
+# 项目名称建议和目标一致，避免混淆
 project(GrpcMainServer CXX)
 
-# -------------- C++ 标准 --------------
+# -------------- 2. C++ 标准 --------------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# -------------- 寻找依赖 --------------
+# -------------- 3. 依赖查找配置 (关键优化) --------------
+# 技巧：不要在 CMake 文件里写死 "/home/ttw/..." 绝对路径。
+# 而是告诉 CMake："如果在系统默认路径找不到，就去这个路径看看"
+# 这样你的代码发给别人（或者换台电脑）也能跑。
+list(APPEND CMAKE_PREFIX_PATH "/home/fd/GRPC_Source/grpc/cmake/build/install")
 
+# 查找 Abseil (现代 gRPC 强依赖 absl，建议加上以防链接错误)
+find_package(absl CONFIG REQUIRED)
 
-# 1. 告诉 CMake 去哪儿找 <Package>Config.cmake
-# set(protobuf_DIR "/home/ttw/.local/lib/cmake/protobuf" CACHE PATH "")
-# set(gRPC_DIR     "/home/ttw/.local/lib/cmake/grpc"     CACHE PATH "")
+# 查找 Protobuf
+find_package(protobuf CONFIG REQUIRED)
 
-# -------------- 寻找依赖 --------------
-# 强制使用 26.1 自带的配置文件，禁用系统旧模块
-find_package(protobuf CONFIG REQUIRED
-             PATHS /home/ttw/.local/lib/cmake/protobuf
-             NO_DEFAULT_PATH)
-find_package(gRPC     CONFIG REQUIRED
-             PATHS /home/ttw/.local/lib/cmake/grpc
-             NO_DEFAULT_PATH)
-# 2. 强制使用 CONFIG 模式，禁用旧 Find 模块
-# find_package(protobuf CONFIG REQUIRED)   # 全小写
-# find_package(gRPC     CONFIG REQUIRED)   # 正常大小写
+# 查找 gRPC
+find_package(gRPC CONFIG REQUIRED)
 
-# -------------- 整理源码 --------------
-# 把要编译的源文件列出来；保持和你手动 g++ 时一致
-set(SOURCES
-    mainServer.cpp          # 你自己的服务端主程序
-    
-    # server_proto/proto/grpcS.pb.cc # protoc  生成的消息类
-    # server_proto/proto/grpcS.grpc.pb.cc # grpc_cpp_plugin 生成的服务类
-
+# -------------- 4. 源码文件管理 --------------
+# 定义变量管理源文件，更加清晰
+set(PROTO_SRC
     stream_proto/proto/stream.pb.cc
     stream_proto/proto/stream.grpc.pb.cc
 )
 
-# -------------- 创建可执行目标 --------------
+set(APP_SRC
+    mainServer.cpp
+)
 
-add_executable(mainServer ${SOURCES})
+# -------------- 5. 创建可执行目标 --------------
+add_executable(mainServer ${APP_SRC} ${PROTO_SRC})
 
-# -------------- 头文件搜索路径 --------------
-# 让编译器能找到 .proto 生成的头文件（当前目录）
+# -------------- 6. 头文件包含路径 --------------
 target_include_directories(mainServer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    # 如果你的代码里写的是 #include "stream.pb.h" 而不是 #include "stream_proto/proto/stream.pb.h"
+    # 你可能需要把这个子目录也加进来：
+    ${CMAKE_CURRENT_SOURCE_DIR}/stream_proto/proto
 )
 
-# -------------- 链接库 --------------
-# 需要链接的库：grpc++、grpc、protobuf、线程
-target_link_libraries(mainServer
+# -------------- 7. 链接库 --------------
+target_link_libraries(mainServer PRIVATE
     gRPC::grpc++
     gRPC::grpc
-     protobuf::libprotobuf   # 26.1 的真实目标，没有 ::protobuf 别名
-    pthread
+    protobuf::libprotobuf # 注意：新版 Protobuf 推荐用这个 target
+    absl::base            # 基础 Abseil 支持 (防止某些版本报错)
+    absl::strings         # 常用字符串支持
 )
 
-# -------------- 可选：打印调试信息 --------------
-message(STATUS "Protobuf version : ${Protobuf_VERSION}")
-message(STATUS "gRPC version       : ${gRPC_VERSION}")
+# 也就是不需要显式链接 pthread，CMake 会自动处理 gRPC 的线程依赖
+
+# -------------- 8. 调试信息 --------------
+message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Protobuf Version: ${protobuf_VERSION}")
+message(STATUS "gRPC Version: ${gRPC_VERSION}")

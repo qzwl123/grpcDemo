@@ -101,7 +101,7 @@ class RouteGuideClient{
         requt.set_data("RecordRoute");
 
         std::unique_ptr<grpc::ClientWriter<Request> > writer(
-            m_stub_->RecordRoute(&context, &resp));
+        m_stub_->RecordRoute(&context, &resp));
         int i = 0;
         for(i = 0; i < 10; i += 1) {
         
@@ -110,7 +110,8 @@ class RouteGuideClient{
                 // false 表示流已关闭。
                 break; 
             }
-            
+            std::this_thread::sleep_for(std::chrono::milliseconds(5000)); // 毫秒  只挂当前线程，单位自带类型安全
+
             /* 
                 为什么在同步模式上加上 sleep 后一条都发不出去
 
@@ -122,6 +123,38 @@ class RouteGuideClient{
         }
         std::cout << CLR_CYAN << " [ RecordRoute ] Send count : " << CLR_NONE  << i << std::endl;
         writer->WritesDone();
+
+    }
+
+    /// @brief 双向流RPC
+    void RouteChat() {
+
+        grpc::ClientContext context;
+        std::shared_ptr<grpc::ClientReaderWriter<Request, Response> > stream(
+        m_stub_->RouteChat(&context));
+
+        std::thread writer([stream]() {
+            /*      写的 业务逻辑 Begin      */
+
+            Request note;
+            stream->Write(note);
+
+            /*      写的 业务逻辑 End      */            
+
+            stream->WritesDone(); // 告诉框架写完了
+        });
+
+
+        Response server_note;
+        while (stream->Read(&server_note)) {
+            std::cout << CLR_GREEN << " [ RouteChat ] : " << server_note.message();
+        }
+
+        writer.join();
+        grpc::Status status = stream->Finish();
+        if (!status.ok()) {
+            std::cout << "RouteChat rpc failed." << std::endl;
+        }
 
     }
 
@@ -178,21 +211,28 @@ int main() {
     std::cout << " ********* 同步 RPC Endl ********* " << std::endl;
 
     int nu = 0;
-    std::cin >> nu;
-    switch (nu)
+    while (std::cin >> nu)
     {
-    case 1:
-        guide.GetFeature();
-        break;
-    case 2:
-        guide.ListFeatures();
-        break;
-    case 3:
-        guide.RecordRoute();
-        break;
-    default:
-        break;
+        switch (nu)
+        {
+        case 1:
+            guide.GetFeature();
+            break;
+        case 2:
+            guide.ListFeatures();
+            break;
+        case 3:
+            guide.RecordRoute();
+            break;
+        case 4:
+            guide.RouteChat();
+            break;
+        default:
+            break;
+        }
+        /* code */
     }
+    
     return 0;
 }
 ENDS(synchronize_GRPC)
@@ -242,7 +282,7 @@ public:
                 if (status.ok()) {
                     std::cout << CLR_GREEN << " [ sayHello -> HelloReactor ] :" << CLR_NONE << std::hex << response_->message() << std::endl;
                 } else {
-                    std::cout << CLR_RED <<  " [ sayHello -> HelloReactor ] :"  << status.error_message() << std::endl;
+                    std::cout << CLR_RED <<  " [ sayHello -> HelloReactor error ] :"  << status.error_message() << std::endl;
                 }
                 delete this;   // 自杀，生命周期结束
             }
@@ -348,9 +388,9 @@ ENDS(callback_GRPC)
 
 int main() {
 
-    // synchronize_GRPC::main();
+    synchronize_GRPC::main();
 
-    callback_GRPC::main();
+    //callback_GRPC::main();
 
     return 0;
 }
